@@ -1,0 +1,44 @@
+#+TITLE: Steele
+
+@@html:<b>@@S@@html:</b>@@cheme-based
+@@html:<b>@@T@@html:</b>@@re@@html:<b>@@E@@html:</b>@@
+@@html:<b>@@E@@html:</b>@@va@@html:<b>@@L@@html:</b>@@uating
+@@html:<b>@@E@@html:</b>@@ngine for Chess.
+
+The goal of this project is to produce an elegant and readable chess
+engine in R7RS scheme. Performance is secondary.
+
+This project is part of my *Analog Sprint*. I have hardly written
+anything by hand in the last 2 years. I am trying to remove this
+dependence on LLMs via analog sprints like this. This project will not
+have any LLM generated code.
+
+The overall design I have in mind is a simple minimax alpha-beta
+pruning chess engine a la [[https://www.youtube.com/watch?v=U4ogK0MIzqk][Sebastian Lague]].
+
+I wrote a chess engine based on the above video in ASP.NET Blazor
+WebAssembly back in 2022 called [[https://github.com/notshriram/chessnovert][Chessnovert]]. This could be the
+spiritial scheme successor to that.
+
+* Name
+
+Initially I wanted to call this "check/cc" -- check with current
+continuation, but github (and any system really) does not play well
+with slashes in names, so I went with "steele" which is a backronym
+that stands for @@html:<b>@@S@@html:</b>@@cheme-based
+@@html:<b>@@T@@html:</b>@@re@@html:<b>@@E@@html:</b>@@
+@@html:<b>@@E@@html:</b>@@va@@html:<b>@@L@@html:</b>@@uating
+@@html:<b>@@E@@html:</b>@@ngine and of
+course, also the name of one of the creators of scheme who I hear [[https://www.sigada.org/conf/hilt2012/Guy-Steele.html][is
+fond of chess.]]
+
+
+* Tentative Architectural Choices
+- Chibi Scheme :: For its robust R7RS support  
+- Minimax Algorithm :: Just like Chessnovert
+- UCI :: For interfacing with boards such as xboard.
+
+* License
+
+This code is license under AGPL-3.0, the text for the license may be
+found in [[./LICENSE][LICENSE]].
