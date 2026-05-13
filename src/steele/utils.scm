@@ -22,7 +22,7 @@
        ('pawn   "\x2659")))))
 
 ;; vector-for-each-with-index
-;; just like vector-for-each-with-index-each but
+;; just like vector-for-each but
 ;; also provides index
 (define vector-for-each-with-index
   (lambda (l v)
@@ -39,20 +39,18 @@
     ;; https://github.com/madnight/gnuchess/blob/f910dd4b19147d91b4b76c1954b9f9e844e07683/src/frontend/output.cc#L44
     (let ((white-square "\x1b;[7;37m") (black-square "\x1b;[7;35m"))
       (vector-for-each-with-index
-       (lambda (v rank)
-         (vector-for-each-with-index
-          (lambda (p file)
-            (begin
-              (if
-               (even? (+ rank file))
-               (display white-square)
-               (display black-square))
-              (display
-               (if (null? p)
-                   " "
-                   (piece->unicode p)))
-              (display " ")))
-            v)
-          (newline))
-         (board-grid b)))))
+       (lambda (p i)
+         (let ((rank (quotient i 8)) (file (remainder i 8)))
+           (begin
+             (if
+              (even? (+ rank file))
+              (display white-square)
+              (display black-square))
+             (display
+              (if (null? p)
+                  " "
+                  (piece->unicode p)))
+             (display " ")
+             (if (= file 7) (newline)))))
+       (board-grid b)))))
 

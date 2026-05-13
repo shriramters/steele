@@ -5,6 +5,6 @@
   (import (scheme base))
   (export make-board board? board-grid board-ref
           make-piece piece? piece-name piece-colour
-          make-square square? square-file square-rank
+          make-square square? square-file square-rank square->index
           make-move move? move-from move-to)
   (include "board.scm"))

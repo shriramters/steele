@@ -2,7 +2,7 @@
 ;; SPDX-License-Identifier: AGPL-3.0-only
 
 (define-record-type <board>
-  ;; grid is a 2D vector of 8x8
+  ;; grid is a 1D vector of length 64
   ;; 8 vectors, each containing 8 <piece>s
   (make-board grid)
   board?
@@ -12,8 +12,8 @@
 (define board-ref
   (lambda (b sq)
     (vector-ref
-     (vector-ref (board-grid b) (square-file sq))
-     (square-rank sq))))
+     (board-grid b)
+     (square->index sq))))
 
 ;; square can be used to address
 ;; the board
@@ -22,6 +22,10 @@
   square?
   (file square-file)
   (rank square-rank))
+
+;; convert square to vector index
+(define (square->index sq)
+  (+ (square-file sq) (* 8 (square-rank sq))))
 
 (define-record-type <piece>
   (make-piece name colour)
