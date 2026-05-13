@@ -18,7 +18,7 @@ pruning chess engine a la [[https://www.youtube.com/watch?v=U4ogK0MIzqk][Sebasti
 
 I wrote a chess engine based on the above video in ASP.NET Blazor
 WebAssembly back in 2022 called [[https://github.com/notshriram/chessnovert][Chessnovert]]. This could be the
-spiritial scheme successor to that.
+spiritual scheme successor to that.
 
 * Name
 
@@ -38,7 +38,31 @@ fond of chess.]]
 - Minimax Algorithm :: Just like Chessnovert
 - UCI :: For interfacing with boards such as xboard.
 
+* Project Structure
+#+begin_example
+.
+├── LICENSE
+├── README.org
+├── steele            # script to run the project
+└── src
+    ├── main.scm      # main entrypoint
+    └── steele        # libraries (steele foo)
+        ├── board.scm
+        ├── board.sld
+        ├── utils.scm
+        └── utils.sld
+#+end_example
+
+* Running
+From the project root, run the following:
+
+#+begin_src bash
+  ./steele
+  # or
+  chibi-scheme -I src src/main.scm
+#+end_src
+
 * License
 
-This code is license under AGPL-3.0, the text for the license may be
+This code is licensed under AGPL-3.0, the text for the license may be
 found in [[./LICENSE][LICENSE]].

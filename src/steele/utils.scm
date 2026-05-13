@@ -1,0 +1,58 @@
+;; SPDX-FileCopyrightText: 2026 Shriram Ravindranathan <s20n@ters.dev>
+;; SPDX-License-Identifier: AGPL-3.0-only
+
+;; https://en.wikipedia.org/wiki/Chess_symbols_in_Unicode
+(define piece->unicode
+  (lambda (p)
+    (if
+     (eq? (piece-colour p) 'black)
+     (case (piece-name p)
+       ('king   "\x265A")
+       ('queen  "\x265B")
+       ('rook   "\x265C")
+       ('bishop "\x265D")
+       ('knight "\x265E")
+       ('pawn   "\x265F"))
+     (case (piece-name p)
+       ('king   "\x2654")
+       ('queen  "\x2655")
+       ('rook   "\x2656")
+       ('bishop "\x2657")
+       ('knight "\x2658")
+       ('pawn   "\x2659")))))
+
+;; vector-for-each-with-index
+;; just like vector-for-each-with-index-each but
+;; also provides index
+(define vector-for-each-with-index
+  (lambda (l v)
+    (let loop ((i 0))
+      (if (< i (vector-length v))
+          (begin
+            (l (vector-ref v i) i)
+            (loop (+ i 1)))))))
+
+;; print a gnuchess-graphical like board
+(define print-board
+  (lambda (b)
+    ;; from gnuchess
+    ;; https://github.com/madnight/gnuchess/blob/f910dd4b19147d91b4b76c1954b9f9e844e07683/src/frontend/output.cc#L44
+    (let ((white-square "\x1b;[7;37m") (black-square "\x1b;[7;35m"))
+      (vector-for-each-with-index
+       (lambda (v rank)
+         (vector-for-each-with-index
+          (lambda (p file)
+            (begin
+              (if
+               (even? (+ rank file))
+               (display white-square)
+               (display black-square))
+              (display
+               (if (null? p)
+                   " "
+                   (piece->unicode p)))
+              (display " ")))
+            v)
+          (newline))
+         (board-grid b)))))
+
