@@ -47,9 +47,9 @@
     (make-piece 'knight 'black)
     (make-piece 'rook 'black))))
 
-;; print the piece on E4
+;; print the piece on E1
 (display
- (piece-name (board-ref b (make-square 0 0))))
+ (piece-name (board-ref b (sq e1))))
 (newline)
 
 (define apply-move
@@ -61,12 +61,12 @@
       ;; copy piece to to-square
       (vector-set!
        new-grid
-       (square->index to)
+       to
        p)
       ;; delete piece from from-square
       (vector-set!
        new-grid
-       (square->index from)
+       from
        '())
       (make-board new-grid))))
 
@@ -84,46 +84,8 @@
  (apply-move
   (apply-move
    b
-   (make-move (make-square 3 1) (make-square 3 3)))
-  (make-move (make-square 3 6) (make-square 3 4))))
-
-;; This was generated from a PGN
-;; first convert the PGN to coordinate notation
-;; using https://marianogappa.github.io/ostinato-examples/convert
-;; you should be getting a file of the sort
-;; 1. E2e4 E7e5
-;; 2. G1f3 B8c6
-;; then transform it with the following bash pipe chain
-#|
-cat coordinate-notation.txt | \
-awk '{print $2; print $3}' | \
-tr '[:lower:]' '[:upper:]' | \
-awk -F "" \
-'BEGIN{for(n=0;n<256;n++)ord[sprintf("%c",n)]=n}{
-print "(make-move (make-square " 7 - ord[$1] + ord["A"] " " $2 - 1 ") (make-square " 7 - ord[$3] + ord["A"] " " $4 - 1 "))"
-}'
-|#
-(define fried-liver-game
-  (list
-   (make-move (make-square 3 1) (make-square 3 3))
-   (make-move (make-square 3 6) (make-square 3 4))
-   (make-move (make-square 1 0) (make-square 2 2))
-   (make-move (make-square 6 7) (make-square 5 5))
-   (make-move (make-square 2 0) (make-square 5 3))
-   (make-move (make-square 1 7) (make-square 2 5))
-   (make-move (make-square 2 2) (make-square 1 4))
-   (make-move (make-square 4 6) (make-square 4 4))
-   (make-move (make-square 3 3) (make-square 4 4))
-   (make-move (make-square 2 5) (make-square 4 4))
-   (make-move (make-square 1 4) (make-square 2 6))
-   (make-move (make-square 3 7) (make-square 2 6))
-   (make-move (make-square 4 0) (make-square 2 2))
-   (make-move (make-square 2 6) (make-square 1 7))
-   (make-move (make-square 5 3) (make-square 4 4))
-   (make-move (make-square 4 7) (make-square 4 4))
-   (make-move (make-square 2 2) (make-square 4 4))
-   (make-move (make-square 5 7) (make-square 3 5))
-   (make-move (make-square 4 4) (make-square 3 5))))
+   (mv e2e4))
+  (mv e7e5)))
 
 (define apply-move-list
   (lambda (b l)
@@ -132,10 +94,6 @@ print "(make-move (make-square " 7 - ord[$1] + ord["A"] " " $2 - 1 ") (make-squa
      b
      (apply-move-list (apply-move b (car l)) (cdr l)))))
 
-(display "Fried Liver Game\n")
-
-(print-board (apply-move-list b fried-liver-game))
-
 (display "Valid Bishop Move?\n")
 (display "Let's test bc4 after e4 e5 nf3 ng6 -- italian game\n")
 
@@ -143,20 +101,30 @@ print "(make-move (make-square " 7 - ord[$1] + ord["A"] " " $2 - 1 ") (make-squa
   (apply-move-list
    b
    (list
-    (make-move (make-square 3 1) (make-square 3 3))
-    (make-move (make-square 3 6) (make-square 3 4))
-    (make-move (make-square 1 0) (make-square 2 2))
-    (make-move (make-square 6 7) (make-square 5 5)))))
+    (mv e2e4)
+    (mv e7e5)
+    (mv g1f3)
+    (mv b8c6))))
+
 (print-board italian-board)
+
 (display "bc4 valid?: ")
 (display
  (valid-bishop-move?
   italian-board
-  (make-move (make-square 2 0) (make-square 5 3))))
+  (mv f1c4)))
 (newline)
+
 (display "bd4 valid?: ")
 (display
  (valid-bishop-move?
   italian-board
-  (make-move (make-square 2 0) (make-square 4 3))))
+  (mv f1d4)))
+(newline)
+
+(display "bh3 valid?: ")
+(display
+ (valid-bishop-move?
+  italian-board
+  (mv f1h3)))
 (newline)

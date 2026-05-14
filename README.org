@@ -74,6 +74,7 @@ of development.
   indirection and causes the code to look very superfluous, this is
   against the scheme idiom I am looking for.
 - We need to add tests (srfi 64) starting with move validation.
+- UPDATE: square record-type was removed in favour of raw indices.
 
 * License
 

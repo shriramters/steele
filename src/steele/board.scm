@@ -10,22 +10,34 @@
 
 ;; get a piece from the board
 (define board-ref
-  (lambda (b sq)
+  (lambda (b idx)
     (vector-ref
      (board-grid b)
-     (square->index sq))))
+     idx)))
 
-;; square can be used to address
-;; the board
-(define-record-type <square>
-  (make-square file rank)
-  square?
-  (file square-file)
-  (rank square-rank))
+(define (index->rank i)
+  (quotient i 8))
+
+(define (index->file i)
+  (remainder i 8))
 
 ;; convert square to vector index
-(define (square->index sq)
-  (+ (square-file sq) (* 8 (square-rank sq))))
+(define (square->index r f)
+  (+ f (* 8 r)))
+
+;; "e2" becomes 11
+(define (string->index s)
+  (let* ((file-char (char-upcase (string-ref s 0)))
+        (rank-char (char-upcase (string-ref s 1)))
+        (file (- 7 (- (char->integer file-char) (char->integer #\A))))
+        (rank (- (char->integer rank-char) (char->integer #\1))))
+    (square->index rank file)))
+
+;; square from symbol
+(define-syntax sq
+  (syntax-rules ()
+    ((sq coord)
+     (string->index (symbol->string 'coord)))))
 
 (define-record-type <piece>
   (make-piece name colour)
@@ -34,8 +46,16 @@
   (colour piece-colour))
 
 (define-record-type <move>
-  ;; from and to are <square>s
+  ;; from and to are indices
   (make-move from to)
   move?
   (from move-from)
   (to move-to))
+
+(define-syntax mv
+  (syntax-rules ()
+    ((mv coord)
+     (let* ((coord-str (symbol->string 'coord))
+            (from-str (substring coord-str 0 2))
+            (to-str (substring coord-str 2 4)))
+       (make-move (string->index from-str) (string->index to-str))))))
