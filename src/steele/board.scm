@@ -29,7 +29,7 @@
 (define (string->index s)
   (let* ((file-char (char-upcase (string-ref s 0)))
         (rank-char (char-upcase (string-ref s 1)))
-        (file (- 7 (- (char->integer file-char) (char->integer #\A))))
+        (file (- (char->integer file-char) (char->integer #\A)))
         (rank (- (char->integer rank-char) (char->integer #\1))))
     (square->index rank file)))
 

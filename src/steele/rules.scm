@@ -9,8 +9,8 @@
       (if (= (abs dx) (abs dy))
           (let ((step-x (if (> dx 0) 1 -1)) (step-y (if (> dy 0) 1 -1)))
             (let check-trajectory
-                ((curr-rank (+ 1 (index->rank from)))
-                 (curr-file (+ 1 (index->file from))))
+                ((curr-rank (+ step-x (index->rank from)))
+                 (curr-file (+ step-y (index->file from))))
               (cond
                ((and (= curr-rank (index->rank to))
                      (= curr-file (index->file to))) #t)

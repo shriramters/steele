@@ -21,37 +21,25 @@
        ('knight "\x2658")
        ('pawn   "\x2659")))))
 
-;; vector-for-each-with-index
-;; just like vector-for-each but
-;; also provides index
-(define vector-for-each-with-index
-  (lambda (l v)
-    (let loop ((i 0))
-      (if (< i (vector-length v))
-          (begin
-            (l (vector-ref v i) i)
-            (loop (+ i 1)))))))
-
 ;; print a gnuchess-graphical like board
 (define print-board
   (lambda (b)
     ;; from gnuchess
     ;; https://github.com/madnight/gnuchess/blob/f910dd4b19147d91b4b76c1954b9f9e844e07683/src/frontend/output.cc#L44
     (let ((white-square "\x1b;[7;37m") (black-square "\x1b;[7;35m"))
-      (vector-for-each-with-index
-       (lambda (p i)
-         (let ((rank (quotient i 8)) (file (remainder i 8)))
-           (begin
-             (if
-              (even? (+ rank file))
-              (display white-square)
-              (display black-square))
-             (display
-              (if (null? p)
-                  " "
-                  (piece->unicode p)))
-             (display " ")
-             (if (= file 7) (newline))
-             ;; clear the color
-             (display "\x1b[0m"))))
-       (board-grid b)))))
+      (let rank-loop ((r 7))
+        (let file-loop ((f 0))
+          (if
+           (odd? (+ r f))
+           (display white-square)
+           (display black-square))
+          (display
+           (if (null? (board-ref b (square->index r f)))
+               " "
+               (piece->unicode (board-ref b (square->index r f)))))
+          (display " ")
+          (if (< f 7) (file-loop (+ f 1))))
+        (newline)
+        (if (> r 0) (rank-loop (- r 1))))
+      ;; clear the colour
+      (display "\x1b[0m"))))
