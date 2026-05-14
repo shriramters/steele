@@ -196,10 +196,17 @@
   (mv d2d3)))
 (newline)
 
-
 (display "e6 valid?: ")
 (display
  (valid-pawn-move?
   scandinavian-board
   (mv e4e6)))
 (newline)
+
+(let game-loop ((board (make-default-board)))
+  (print-board board)
+  (display "Enter move x1y1 > ")
+  (let ((move (string->move (read-line))))
+    (if (pseudo-legal-move? board move)
+        (game-loop (apply-move board move))
+        (display "Illegal move. Goodbye.\n"))))

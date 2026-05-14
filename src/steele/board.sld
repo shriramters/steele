@@ -6,5 +6,5 @@
   (export make-board board? board-grid board-ref make-default-board
           sq square->index index->file index->rank
           make-piece piece? piece-name piece-colour
-          make-move move? move-from move-to mv)
+          make-move move? move-from move-to mv string->move)
   (include "board.scm"))

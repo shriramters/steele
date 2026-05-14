@@ -52,13 +52,16 @@
   (from move-from)
   (to move-to))
 
+(define (string->move s)
+  (let ((from-str (substring s 0 2))
+        (to-str (substring s 2 4)))
+    (make-move (string->index from-str) (string->index to-str))))
+
 (define-syntax mv
   (syntax-rules ()
     ((mv coord)
-     (let* ((coord-str (symbol->string 'coord))
-            (from-str (substring coord-str 0 2))
-            (to-str (substring coord-str 2 4)))
-       (make-move (string->index from-str) (string->index to-str))))))
+     (let ((coord-str (symbol->string 'coord)))
+       (string->move coord-str)))))
 
 ;; helper to create a board with the default starting position
 (define (make-default-board)

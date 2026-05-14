@@ -25,7 +25,7 @@
   (let* ((from (move-from move))
          (to (move-to move))
          (dx (- (index->rank to) (index->rank from)))
-         (dy (- (index->file to) (index->file from)))) 
+         (dy (- (index->file to) (index->file from))))
     (or (and (= (abs dx) 1) (= (abs dy) 2))
         (and (= (abs dx) 2) (= (abs dy) 1)))))
 
@@ -86,3 +86,29 @@
           (and (= dx 1) (not (null? cap)) (equal? (piece-colour cap) 'black))
           (and (= dx -1) (not (null? cap)) (equal? (piece-colour cap) 'white))))
      (else #f))))
+
+;; pseudo-legal-move?
+;; this procedure has 3 roles
+;; 1. does the from-square have a piece
+;; 2. is the move valid as per valid-*-move?
+;; 3. ensure the to-square does not have a friendly piece.
+(define (pseudo-legal-move? board move)
+  (let* ((from (move-from move))
+         (to (move-to move))
+         (p (board-ref board from))
+         (cap (board-ref board to)))
+    (cond
+     ;; from-piece is null
+     ((null? p) #f)
+     ;; friendly fire
+     ((and (not (null? cap)) (equal? (piece-colour p) (piece-colour cap))) #f)
+     ;; dispatch valid-*-move
+     (else
+      (case (piece-name p)
+        ('bishop (valid-bishop-move? board move))
+        ('knight (valid-knight-move? board move))
+        ('rook   (valid-rook-move? board move))
+        ('queen  (valid-queen-move? board move))
+        ('king   (valid-king-move? board move))
+        ('pawn   (valid-pawn-move? board move))
+        (else #f))))))
