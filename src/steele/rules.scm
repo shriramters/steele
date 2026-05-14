@@ -3,18 +3,28 @@
 
 ;; Diagon Alley
 (define (valid-bishop-move? board move)
-  (let ((from (move-from move)) (to (move-to move)))
-    (let ((dx (- (index->rank to) (index->rank from)))
-          (dy (- (index->file to) (index->file from))))
-      (if (= (abs dx) (abs dy))
-          (let ((step-x (if (> dx 0) 1 -1)) (step-y (if (> dy 0) 1 -1)))
-            (let check-trajectory
-                ((curr-rank (+ step-x (index->rank from)))
-                 (curr-file (+ step-y (index->file from))))
-              (cond
-               ((and (= curr-rank (index->rank to))
-                     (= curr-file (index->file to))) #t)
-               ((null? (board-ref board (square->index curr-rank curr-file)))
-                (check-trajectory (+ curr-rank step-x) (+ curr-file step-y)))
-               (else #f))))
-          #f))))
+  (let* ((from (move-from move))
+         (to (move-to move))
+         (dx (- (index->rank to) (index->rank from)))
+         (dy (- (index->file to) (index->file from)))
+         (step-x (if (> dx 0) 1 -1))
+         (step-y (if (> dy 0) 1 -1))
+         (step (+ step-y (* 8 step-x))))
+    (if (= (abs dx) (abs dy))
+        (let check-trajectory
+            ((curr-idx (+ step from)))
+          (cond
+           ((= curr-idx to) #t)
+           ((null? (board-ref board curr-idx))
+            (check-trajectory (+ curr-idx step)))
+           (else #f)))
+        #f)))
+
+;; Juan
+(define (valid-knight-move? board move)
+  (let* ((from (move-from move))
+         (to (move-to move))
+         (dx (- (index->rank to) (index->rank from)))
+         (dy (- (index->file to) (index->file from)))) 
+    (or (and (= (abs dx) 1) (= (abs dy) 2))
+        (and (= (abs dx) 2) (= (abs dy) 1)))))

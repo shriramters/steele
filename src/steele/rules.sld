@@ -3,5 +3,5 @@
 
 (define-library (steele rules)
   (import (scheme base) (steele board))
-  (export valid-bishop-move?)
+  (export valid-bishop-move? valid-knight-move?)
   (include "rules.scm"))

@@ -7,45 +7,7 @@
         (steele board) (steele utils) (steele rules))
 
 ;; create a default chessboard
-(define b
-  (make-board
-   (vector
-    (make-piece 'rook 'white)
-    (make-piece 'knight 'white)
-    (make-piece 'bishop 'white)
-    (make-piece 'queen 'white)
-    (make-piece 'king 'white)
-    (make-piece 'bishop 'white)
-    (make-piece 'knight 'white)
-    (make-piece 'rook 'white)
-    (make-piece 'pawn 'white)
-    (make-piece 'pawn 'white)
-    (make-piece 'pawn 'white)
-    (make-piece 'pawn 'white)
-    (make-piece 'pawn 'white)
-    (make-piece 'pawn 'white)
-    (make-piece 'pawn 'white)
-    (make-piece 'pawn 'white)
-    '() '() '() '() '() '() '() '()
-    '() '() '() '() '() '() '() '()
-    '() '() '() '() '() '() '() '()
-    '() '() '() '() '() '() '() '()
-    (make-piece 'pawn 'black)
-    (make-piece 'pawn 'black)
-    (make-piece 'pawn 'black)
-    (make-piece 'pawn 'black)
-    (make-piece 'pawn 'black)
-    (make-piece 'pawn 'black)
-    (make-piece 'pawn 'black)
-    (make-piece 'pawn 'black)     
-    (make-piece 'rook 'black)
-    (make-piece 'knight 'black)
-    (make-piece 'bishop 'black)
-    (make-piece 'queen 'black)
-    (make-piece 'king 'black)
-    (make-piece 'bishop 'black)
-    (make-piece 'knight 'black)
-    (make-piece 'rook 'black))))
+(define b (make-default-board))
 
 ;; print the piece on E1
 (display
@@ -127,4 +89,28 @@
  (valid-bishop-move?
   italian-board
   (mv f1h3)))
+(newline)
+
+(display "Valid Knight Move?\n")
+(display "Let's test nc3 after e4 e5 nf3 ng6 -- three knights game\n")
+
+(display "nc3 valid?: ")
+(display
+ (valid-knight-move?
+  italian-board
+  (mv b1c3)))
+(newline)
+
+(display "na3 valid?: ")
+(display
+ (valid-knight-move?
+  italian-board
+  (mv b1a3)))
+(newline)
+
+(display "nb3 valid?: ")
+(display
+ (valid-knight-move?
+  italian-board
+  (mv b1b3)))
 (newline)

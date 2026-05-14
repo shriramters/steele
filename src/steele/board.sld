@@ -3,7 +3,8 @@
 
 (define-library (steele board)
   (import (scheme base) (scheme char))
-  (export make-board board? board-grid board-ref sq square->index index->file index->rank
+  (export make-board board? board-grid board-ref make-default-board
+          sq square->index index->file index->rank
           make-piece piece? piece-name piece-colour
           make-move move? move-from move-to mv)
   (include "board.scm"))
