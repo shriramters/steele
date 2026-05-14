@@ -114,3 +114,33 @@
   italian-board
   (mv b1b3)))
 (newline)
+
+
+(display "Valid Rook Move?\n")
+(display "Let's test rh3 after 1. h4 -- samurai opening\n")
+
+(define samurai-board
+  (apply-move b (mv h2h4)))
+
+(print-board samurai-board)
+
+(display "rh3 valid?: ")
+(display
+ (valid-rook-move?
+  samurai-board
+  (mv h1h3)))
+(newline)
+
+(display "rh5 valid?: ")
+(display
+ (valid-rook-move?
+  samurai-board
+  (mv h1h5)))
+(newline)
+
+(display "rh2 valid?: ")
+(display
+ (valid-rook-move?
+  samurai-board
+  (mv h1h2)))
+(newline)
