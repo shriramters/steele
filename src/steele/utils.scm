@@ -51,6 +51,7 @@
                   " "
                   (piece->unicode p)))
              (display " ")
-             (if (= file 7) (newline)))))
+             (if (= file 7) (newline))
+             ;; clear the color
+             (display "\x1b[0m"))))
        (board-grid b)))))
-

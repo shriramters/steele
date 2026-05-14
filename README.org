@@ -62,6 +62,19 @@ From the project root, run the following:
   chibi-scheme -I src src/main.scm
 #+end_src
 
+* Current Status
+
+This project is a learning exercise, currently in the initial stages
+of development.
+
+** Thoughts
+<2026-05-14 Thu> :
+- I am having second thoughts about the square record-type. It is
+  causing more problems that it is solving. It is unnecessary
+  indirection and causes the code to look very superfluous, this is
+  against the scheme idiom I am looking for.
+- We need to add tests (srfi 64) starting with move validation.
+
 * License
 
 This code is licensed under AGPL-3.0, the text for the license may be

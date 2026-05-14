@@ -4,7 +4,7 @@
 ;; main entrypoint
 
 (import (scheme base) (scheme small)
-        (steele board) (steele utils))
+        (steele board) (steele utils) (steele rules))
 
 ;; create a default chessboard
 (define b
@@ -57,7 +57,7 @@
     (let* ((from (move-from m))
           (to (move-to m))
           (p (board-ref b from))
-          (new-grid (board-grid b)))
+          (new-grid (vector-copy (board-grid b))))
       ;; copy piece to to-square
       (vector-set!
        new-grid
@@ -132,7 +132,31 @@ print "(make-move (make-square " 7 - ord[$1] + ord["A"] " " $2 - 1 ") (make-squa
      b
      (apply-move-list (apply-move b (car l)) (cdr l)))))
 
-(display "Fried Liver Game")
-(newline)
+(display "Fried Liver Game\n")
 
 (print-board (apply-move-list b fried-liver-game))
+
+(display "Valid Bishop Move?\n")
+(display "Let's test bc4 after e4 e5 nf3 ng6 -- italian game\n")
+
+(define italian-board
+  (apply-move-list
+   b
+   (list
+    (make-move (make-square 3 1) (make-square 3 3))
+    (make-move (make-square 3 6) (make-square 3 4))
+    (make-move (make-square 1 0) (make-square 2 2))
+    (make-move (make-square 6 7) (make-square 5 5)))))
+(print-board italian-board)
+(display "bc4 valid?: ")
+(display
+ (valid-bishop-move?
+  italian-board
+  (make-move (make-square 2 0) (make-square 5 3))))
+(newline)
+(display "bd4 valid?: ")
+(display
+ (valid-bishop-move?
+  italian-board
+  (make-move (make-square 2 0) (make-square 4 3))))
+(newline)
