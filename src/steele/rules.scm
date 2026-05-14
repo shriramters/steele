@@ -30,6 +30,8 @@
         (and (= (abs dx) 2) (= (abs dy) 1)))))
 
 ;; al-Fil
+;; In India, the bishop is called Fil (meaning elephant)
+;; And the rook is called hathi (meaning elephant)
 (define (valid-rook-move? board move)
   (let* ((from (move-from move))
          (to (move-to move))
@@ -52,3 +54,35 @@
   (or (valid-bishop-move? board move)
       (valid-rook-move? board move)))
 
+(define (valid-king-move? board move)
+  (let* ((from (move-from move))
+         (to (move-to move))
+         (dx (- (index->rank to) (index->rank from)))
+         (dy (- (index->file to) (index->file from))))
+    (and (<= (abs dx) 1) (<= (abs dy) 1))))
+
+(define (valid-pawn-move? board move)
+  (let* ((from (move-from move))
+         (to (move-to move))
+         (dx (- (index->rank to) (index->rank from)))
+         (dy (- (index->file to) (index->file from)))
+         (p (board-ref board from))
+         (cap (board-ref board to)))
+    (cond
+     ((= dy 0)
+      (if (equal? (piece-colour p) 'white)
+          (or (and (= (index->rank from) 1)             ;; starting pos
+                   (= dx 2)                             ;; double push
+                   (null? (board-ref board (+ from 8))) ;; trajectory clear
+                   (null? cap))                         ;; no captures
+              (and (= dx 1) (null? cap)))               ;; otherwise, single push, no captures
+          (or (and (= (index->rank from) 6)
+                   (= dx -2)
+                   (null? (board-ref board (- from 8)))
+                   (null? cap))
+              (and (= dx -1) (null? cap)))))
+     ((= (abs dy) 1)
+      (if (equal? (piece-colour p) 'white)
+          (and (= dx 1) (not (null? cap)) (equal? (piece-colour cap) 'black))
+          (and (= dx -1) (not (null? cap)) (equal? (piece-colour cap) 'white))))
+     (else #f))))

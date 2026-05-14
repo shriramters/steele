@@ -3,5 +3,6 @@
 
 (define-library (steele rules)
   (import (scheme base) (steele board))
-  (export valid-bishop-move? valid-knight-move? valid-rook-move? valid-queen-move?)
+  (export valid-bishop-move? valid-knight-move? valid-rook-move?
+          valid-queen-move? valid-king-move? valid-pawn-move?)
   (include "rules.scm"))

@@ -144,3 +144,62 @@
   samurai-board
   (mv h1h2)))
 (newline)
+
+(display "Valid King Move?\n")
+(display "Let's test ke2 after 1. e4 e5 -- bong cloud\n")
+
+(define bongcloud-board
+  (apply-move-list b (list (mv e2e4) (mv e7e5))))
+
+(print-board bongcloud-board)
+
+(display "ke2 valid?: ")
+(display
+ (valid-king-move?
+  bongcloud-board
+  (mv e1e2)))
+(newline)
+
+(display "ke3 valid?: ")
+(display
+ (valid-king-move?
+  bongcloud-board
+  (mv e1e3)))
+(newline)
+
+(display "kd2 valid?: ")
+(display
+ (valid-king-move?
+  bongcloud-board
+  (mv e1d2)))
+(newline)
+
+(display "Valid Pawn Move?\n")
+(display "Start from scandinavian board and check various pawn moves\n")
+
+(define scandinavian-board
+  (apply-move-list b (list (mv e2e4) (mv d7d5))))
+
+(print-board scandinavian-board)
+
+(display "exd5 valid?: ")
+(display
+ (valid-pawn-move?
+  scandinavian-board
+  (mv e4d5)))
+(newline)
+
+(display "d3 valid?: ")
+(display
+ (valid-pawn-move?
+  scandinavian-board
+  (mv d2d3)))
+(newline)
+
+
+(display "e6 valid?: ")
+(display
+ (valid-pawn-move?
+  scandinavian-board
+  (mv e4e6)))
+(newline)
