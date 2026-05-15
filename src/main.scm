@@ -196,8 +196,23 @@
           (if (null? ll) '() (car ll))
           (loop (- count 1) (cdr ll))))))
 
+;; move-generation-test
+(display "Running move generation test for depth 3. Please stand by\n")
+(display "Count: ")
+(display
+(let perft ((board b)
+          (depth 3))
+  (if (= depth 0) 1
+      (let loop ((moves (generate-move-list board)) (count 0))
+        (if (not (null? moves))
+            (loop (cdr moves) (+ count (perft (apply-move board (car moves)) (- depth 1))))
+            count)))))
+(newline)
 (let game-loop ((board (make-default-board)))
   (print-board board)
+  (display "Current Evaluation: ")
+  (display (heuristic board))
+  (newline)
   (display "Enter move (e.g. e2e4) or Ctrl-D to exit> ")
   (let ((input (read-line)))
     (if

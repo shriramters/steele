@@ -4,5 +4,5 @@
 (define-library (steele engine)
   (import (scheme base)
           (steele board) (steele rules))
-  (export generate-move-list)
+  (export generate-move-list heuristic)
   (include "engine.scm"))
