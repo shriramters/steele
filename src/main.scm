@@ -14,24 +14,6 @@
  (piece-name (board-ref b (sq e1))))
 (newline)
 
-(define apply-move
-  (lambda (b m)
-    (let* ((from (move-from m))
-          (to (move-to m))
-          (p (board-ref b from))
-          (new-grid (vector-copy (board-grid b))))
-      ;; copy piece to to-square
-      (vector-set!
-       new-grid
-       to
-       p)
-      ;; delete piece from from-square
-      (vector-set!
-       new-grid
-       from
-       '())
-      (make-board new-grid))))
-
 ;; print gnuchess-graphical style board
 (print-board b)
 
@@ -48,13 +30,6 @@
    b
    (mv e2e4))
   (mv e7e5)))
-
-(define apply-move-list
-  (lambda (b l)
-    (if
-     (null? l)
-     b
-     (apply-move-list (apply-move b (car l)) (cdr l)))))
 
 (display "Valid Bishop Move?\n")
 (display "Let's test bc4 after e4 e5 nf3 ng6 -- italian game\n")
@@ -205,8 +180,13 @@
 
 (let game-loop ((board (make-default-board)))
   (print-board board)
-  (display "Enter move x1y1 > ")
-  (let ((move (string->move (read-line))))
-    (if (pseudo-legal-move? board move)
-        (game-loop (apply-move board move))
-        (display "Illegal move. Goodbye.\n"))))
+  (display "Enter move (e.g. e2e4) or Ctrl-D to exit> ")
+  (let ((input (read-line)))
+    (if
+     (eof-object? input) (display "\nShutting down steele. Goodbye.\n")
+     (let ((move (string->move input)))
+       (if (legal-move? board move)
+           (game-loop (apply-move board move))
+           (begin
+             (display "Illegal move. Please try again.\n")
+             (game-loop board)))))))

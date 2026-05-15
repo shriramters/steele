@@ -2,11 +2,10 @@
 ;; SPDX-License-Identifier: AGPL-3.0-only
 
 (define-record-type <board>
-  ;; grid is a 1D vector of length 64
-  ;; 8 vectors, each containing 8 <piece>s
-  (make-board grid)
+  (make-board grid turn)
   board?
-  (grid board-grid))
+  (grid board-grid)  ;; 1D vector of 64 with 32 <piece>s
+  (turn board-turn)) ;; 'white or 'black
 
 ;; get a piece from the board
 (define board-ref
@@ -63,6 +62,37 @@
      (let ((coord-str (symbol->string 'coord)))
        (string->move coord-str)))))
 
+;; apply-move: for dumb state mutation
+;; Just follows orders and does not check legality.
+;; Returns a new board (immutability)
+(define apply-move
+  (lambda (b m)
+    (let* ((from (move-from m))
+          (to (move-to m))
+          (p (board-ref b from))
+          (curr-turn (board-turn b))
+          (next-turn (if (eq? curr-turn 'white) 'black 'white))
+          (new-grid (vector-copy (board-grid b))))
+      ;; copy piece to to-square
+      (vector-set!
+       new-grid
+       to
+       p)
+      ;; delete piece from from-square
+      (vector-set!
+       new-grid
+       from
+       '())
+      (make-board new-grid next-turn))))
+
+;; apply-move-list: apply-move on a list of <move> records
+(define apply-move-list
+  (lambda (b l)
+    (if
+     (null? l)
+     b
+     (apply-move-list (apply-move b (car l)) (cdr l)))))
+
 ;; helper to create a board with the default starting position
 (define (make-default-board)
   (make-board
@@ -102,4 +132,5 @@
     (make-piece 'king 'black)
     (make-piece 'bishop 'black)
     (make-piece 'knight 'black)
-    (make-piece 'rook 'black))))
+    (make-piece 'rook 'black))
+   'white))

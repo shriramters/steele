@@ -70,7 +70,7 @@
          (cap (board-ref board to)))
     (cond
      ((= dy 0)
-      (if (equal? (piece-colour p) 'white)
+      (if (eq? (piece-colour p) 'white)
           (or (and (= (index->rank from) 1)             ;; starting pos
                    (= dx 2)                             ;; double push
                    (null? (board-ref board (+ from 8))) ;; trajectory clear
@@ -82,16 +82,17 @@
                    (null? cap))
               (and (= dx -1) (null? cap)))))
      ((= (abs dy) 1)
-      (if (equal? (piece-colour p) 'white)
-          (and (= dx 1) (not (null? cap)) (equal? (piece-colour cap) 'black))
-          (and (= dx -1) (not (null? cap)) (equal? (piece-colour cap) 'white))))
+      (if (eq? (piece-colour p) 'white)
+          (and (= dx 1) (not (null? cap)) (eq? (piece-colour cap) 'black))
+          (and (= dx -1) (not (null? cap)) (eq? (piece-colour cap) 'white))))
      (else #f))))
 
 ;; pseudo-legal-move?
-;; this procedure has 3 roles
+;; this procedure has 4 roles
 ;; 1. does the from-square have a piece
-;; 2. is the move valid as per valid-*-move?
-;; 3. ensure the to-square does not have a friendly piece.
+;; 2. does the from-piece correspond to the current turn
+;; 3. is the move valid as per valid-*-move?
+;; 4. ensure the to-square does not have a friendly piece.
 (define (pseudo-legal-move? board move)
   (let* ((from (move-from move))
          (to (move-to move))
@@ -100,8 +101,10 @@
     (cond
      ;; from-piece is null
      ((null? p) #f)
+     ;; out of turn
+     ((not (eq? (piece-colour p) (board-turn board))) #f)
      ;; friendly fire
-     ((and (not (null? cap)) (equal? (piece-colour p) (piece-colour cap))) #f)
+     ((and (not (null? cap)) (eq? (piece-colour p) (piece-colour cap))) #f)
      ;; dispatch valid-*-move
      (else
       (case (piece-name p)
@@ -112,3 +115,50 @@
         ('king   (valid-king-move? board move))
         ('pawn   (valid-pawn-move? board move))
         (else #f))))))
+
+;; can-capture?: check if square can be captured by attacker-colour
+;; board -> <board>
+;; square -> index
+;; attacker-colour -> 'white or 'black
+(define (can-capture? board square attacker-colour)
+  (let loop ((i 0))
+    (if (< i 64)
+        (let ((p (board-ref board i)))
+          (if
+           (and (not (null? p))
+                (eq? (piece-colour p) attacker-colour)
+                (pseudo-legal-move? board (make-move i square)))
+           #t
+           (loop (+ 1 i))))
+        #f)))
+
+;; king-in-check?: check where the king of a certain colour is
+;; currently in check
+;; as with most of these functions this is based on IsKingInCheck
+;; from Chessnovert
+;; board -> <board>
+;; colour -> 'white or 'black
+(define (king-in-check? board colour)
+  (let* ((king-piece (make-piece 'king colour))
+         (king-index (let kingfinder ((i 0))
+                       (if (< i 64)
+                           (let ((p (board-ref board i)))
+                             (if
+                              (and (not (null? p))
+                                   (equal? p king-piece))
+                              i
+                              (kingfinder (+ 1 i))))
+                           '()))))
+    ;; WTF
+    (if (null? king-index) (raise 'king-abducted-by-aliens))
+    ;; else return the can-capture of king
+    (can-capture? board king-index (if (eq? colour 'white) 'black 'white))))
+
+;; legal-move?
+;; https://www.chessprogramming.org/Legal_Move
+;; "A Legal Move is a pseudo-legal move which does not leave its own king in check."
+(define (legal-move? board move)
+  (if (pseudo-legal-move? board move)
+      ;; check if current king is in check after move
+      (not (king-in-check? (apply-move board move) (board-turn board)))
+      #f))
