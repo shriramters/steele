@@ -4,7 +4,8 @@
 ;; main entrypoint
 
 (import (scheme base) (scheme small)
-        (steele board) (steele utils) (steele rules))
+        (steele board) (steele utils) (steele rules) (steele engine)
+        (srfi 27))
 
 ;; create a default chessboard
 (define b (make-default-board))
@@ -178,6 +179,23 @@
   (mv e4e6)))
 (newline)
 
+(display "Generating move list\n")
+(define ml1 (generate-move-list b))
+(display "(1 ply) Length: ")
+(display (length ml1))
+(newline)
+
+;; random-steele
+;; First Adversary, plays randomly
+;; Takes a board, spits out a random valid move
+;; Returns '() if no move available
+(define (bot-move board)
+  (let ((moves (generate-move-list board)))
+    (let loop ((count (random-integer (length moves))) (ll moves))
+      (if (= 0 count)
+          (if (null? ll) '() (car ll))
+          (loop (- count 1) (cdr ll))))))
+
 (let game-loop ((board (make-default-board)))
   (print-board board)
   (display "Enter move (e.g. e2e4) or Ctrl-D to exit> ")
@@ -186,7 +204,11 @@
      (eof-object? input) (display "\nShutting down steele. Goodbye.\n")
      (let ((move (string->move input)))
        (if (legal-move? board move)
-           (game-loop (apply-move board move))
+           (let* ((newboard (apply-move board move))
+                  (adversary-move (bot-move newboard)))
+             (if (null? adversary-move)
+                 (display "Checkmate. You win!\n")
+                 (game-loop (apply-move newboard adversary-move))))
            (begin
              (display "Illegal move. Please try again.\n")
              (game-loop board)))))))
