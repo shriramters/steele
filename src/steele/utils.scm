@@ -7,19 +7,19 @@
     (if
      (eq? (piece-colour p) 'black)
      (case (piece-name p)
-       ('king   "\x265A")
-       ('queen  "\x265B")
-       ('rook   "\x265C")
-       ('bishop "\x265D")
-       ('knight "\x265E")
-       ('pawn   "\x265F"))
+       ('king   "\x265A;")
+       ('queen  "\x265B;")
+       ('rook   "\x265C;")
+       ('bishop "\x265D;")
+       ('knight "\x265E;")
+       ('pawn   "\x265F;"))
      (case (piece-name p)
-       ('king   "\x2654")
-       ('queen  "\x2655")
-       ('rook   "\x2656")
-       ('bishop "\x2657")
-       ('knight "\x2658")
-       ('pawn   "\x2659")))))
+       ('king   "\x2654;")
+       ('queen  "\x2655;")
+       ('rook   "\x2656;")
+       ('bishop "\x2657;")
+       ('knight "\x2658;")
+       ('pawn   "\x2659;")))))
 
 ;; print a gnuchess-graphical like board
 (define print-board
@@ -42,4 +42,4 @@
         (newline)
         (if (> r 0) (rank-loop (- r 1))))
       ;; clear the colour
-      (display "\x1b[0m"))))
+      (display "\x1b;[0m"))))

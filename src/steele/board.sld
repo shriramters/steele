@@ -4,7 +4,7 @@
 (define-library (steele board)
   (import (scheme base) (scheme char))
   (export make-board board? board-grid board-turn board-ref make-default-board
-          sq square->index index->file index->rank
+          sq square->index index->file index->rank string->index
           make-piece piece? piece-name piece-colour
           make-move move? move-from move-to mv string->move
           apply-move apply-move-list)

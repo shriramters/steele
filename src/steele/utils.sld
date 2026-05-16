@@ -2,7 +2,7 @@
 ;; SPDX-License-Identifier: AGPL-3.0-only
 
 (define-library (steele utils)
-  (import (scheme base) (scheme small)
+  (import (scheme base) (scheme write)
           (steele board))
   (export print-board)
   (include "utils.scm"))

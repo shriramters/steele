@@ -3,7 +3,7 @@
 
 ;; main entrypoint
 
-(import (scheme base) (scheme small)
+(import (scheme base) (scheme write) (scheme read)
         (steele board) (steele utils) (steele rules) (steele engine)
         (srfi 27))
 
