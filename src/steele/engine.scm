@@ -46,5 +46,20 @@
                           (+ score value)
                           (- score value)))
                     score)))
-        score)))
+        (if (eq? (board-turn board) 'white) score (- score)))))
 
+
+(define (perft board depth)
+  (if (= depth 0) 1
+      (let loop ((moves (generate-move-list board)) (count 0))
+        (if (not (null? moves))
+            (loop (cdr moves) (+ count (perft (apply-move board (car moves)) (- depth 1))))
+            count))))
+
+;; minimax search
+(define (search board depth)
+  (if (= depth 0) (heuristic board)
+      (let loop ((moves (generate-move-list board)) (best-eval -999))
+        (if (null? moves)
+            best-eval
+            (loop (cdr moves) (max (- (search (apply-move board (car moves)) (- depth 1))) best-eval))))))

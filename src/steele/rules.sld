@@ -5,5 +5,5 @@
   (import (scheme base) (steele board))
   (export valid-bishop-move? valid-knight-move? valid-rook-move?
           valid-queen-move? valid-king-move? valid-pawn-move?
-          pseudo-legal-move? legal-move?)
+          king-in-check? pseudo-legal-move? legal-move?)
   (include "rules.scm"))

@@ -4,8 +4,7 @@
 ;; main entrypoint
 
 (import (scheme base) (scheme write) (scheme read)
-        (steele board) (steele utils) (steele rules) (steele engine)
-        (srfi 27))
+        (steele board) (steele utils) (steele rules) (steele engine))
 
 ;; create a default chessboard
 (define b (make-default-board))
@@ -22,7 +21,7 @@
 ;; e2e4 -> 3 1 to 3 3
 ;; e7e5 -> 3 6 to 3 4
 ;; the formula is e2 = 8-ord(e);2-1 = 3;1 
-(display "playing e2e4 e7e5")
+(display "playing e4 e5")
 (newline)
 
 (print-board
@@ -185,28 +184,20 @@
 (display (length ml1))
 (newline)
 
-;; random-steele
-;; First Adversary, plays randomly
-;; Takes a board, spits out a random valid move
-;; Returns '() if no move available
+;; minimax-steele
+;; plays the best minimax search result at a depth 2
 (define (bot-move board)
   (let ((moves (generate-move-list board)))
-    (let loop ((count (random-integer (length moves))) (ll moves))
-      (if (= 0 count)
-          (if (null? ll) '() (car ll))
-          (loop (- count 1) (cdr ll))))))
+    (let loop ((best-score -999)
+               (best-move '())
+               (ll moves))
+      (if (null? ll)
+          best-move
+          (let ((new-score (- (search (apply-move board (car ll)) 2))))
+            (loop (if (> new-score best-score) new-score best-score)
+                  (if (> new-score best-score) (car ll) best-move)
+                  (cdr ll)))))))
 
-;; move-generation-test
-(display "Running move generation test for depth 3. Please stand by\n")
-(display "Count: ")
-(display
-(let perft ((board b)
-          (depth 3))
-  (if (= depth 0) 1
-      (let loop ((moves (generate-move-list board)) (count 0))
-        (if (not (null? moves))
-            (loop (cdr moves) (+ count (perft (apply-move board (car moves)) (- depth 1))))
-            count)))))
 (newline)
 (let game-loop ((board (make-default-board)))
   (print-board board)

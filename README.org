@@ -8,8 +8,7 @@
 The goal of this project is to produce an elegant and readable chess
 engine in R7RS scheme. Performance is secondary.
 
-This project is part of my *Analog Sprint*. I have hardly written
-anything by hand in the last 2 years. I am trying to remove this
+This project is part of my *Analog Sprint*. I am trying to remove this
 dependence on LLMs via analog sprints like this. This project will not
 have any LLM generated code.
 
@@ -43,14 +42,18 @@ fond of chess.]]
 .
 ├── LICENSE
 ├── README.org
-├── steele            # script to run the project
+├── steele             # script to run the project
 └── src
-    ├── main.scm      # main entrypoint
-    └── steele        # libraries (steele foo)
+    ├── main.scm       # main entrypoint
+    └── steele         # libraries (steele foo)
         ├── board.scm
         ├── board.sld
-        ├── utils.scm
-        └── utils.sld
+	├── engine.scm
+	├── engine.sld
+	├── rules.scm
+	├── rules.sld
+	├── utils.scm
+	└── utils.sld
 #+end_example
 
 * Running
@@ -62,19 +65,70 @@ From the project root, run the following:
   chibi-scheme -I src src/main.scm
 #+end_src
 
+* Compiling and Running
+If you have [[https://justinethier.github.io/cyclone/][cyclone]], you can compile this into a native binary and
+then run it. It is about 10x faster than chibi-scheme.
+
+#+begin_src bash
+  # compile the macros
+  cyclone -I src src/steele/board.sld
+
+  # compile the main executable
+  cyclone -I src/ src/main.scm
+
+  # run
+  ./src/main
+#+end_src
+
 * Current Status
 
 This project is a learning exercise, currently in the initial stages
 of development.
 
-** Thoughts
-<2026-05-14 Thu> :
-- I am having second thoughts about the square record-type. It is
-  causing more problems that it is solving. It is unnecessary
-  indirection and causes the code to look very superfluous, this is
-  against the scheme idiom I am looking for.
-- We need to add tests (srfi 64) starting with move validation.
-- UPDATE: square record-type was removed in favour of raw indices.
+*** DONE Basic Chess Moves and Validation
+The predicates ~valid-*-move?~ check whether a move obeys the normal
+rules of movement of a piece. The ~pseudo-legal-move?~ predicate is
+the dispatch for ~valid-*-move?~.
+
+The ~legal-move?~ predicate provides the full legality check for a move.
+
+*** DONE Minimax Engine
+The minimax engine is found in [[src/steele/engine.scm][engine.scm]]. It uses a negamax algorithm
+based on the one from the Sebastian Lague video but written with
+scheme idioms like the immutable board and tail-recursive calls.
+
+*** TODO En Passant
+Not implemented yet.
+
+*** TODO Castling
+Not implemented yet.
+
+*** TODO SRFI64 tests
+This is long overdue. I have been staving off this work since the
+beginning. This is of higher priority than the other TODO Items here.
+
+*** TODO UCI support
+Not implemented yet.
+
+* Performance
+
+The performance is horrendous as expected. This is because the board
+is immutable and has to be copied for every branch of the minimax
+tree. I hoped I could use posix threads if the board was immutable but
+that is a later concern.
+
+On cyclone scheme (native binary) on my 2018 Ideapad 330s:
+
+#+begin_example
+perft depth 1   20      0.000863seconds
+perft depth 2   400     0.020688seconds
+perft depth 3   8902    0.380149seconds
+perft depth 4   197281  8.781418seconds
+perft depth 5   4865351 184.580871seconds
+#+end_example
+
+Of course, the depth 5 number is wrong because en passant is not
+implemented yet.
 
 * License
 
