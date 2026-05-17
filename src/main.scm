@@ -11,7 +11,7 @@
 
 ;; print the piece on E1
 (display
- (piece-name (board-ref b (sq e1))))
+ (piece-name (board-ref b (string->index "e1"))))
 (newline)
 
 ;; print gnuchess-graphical style board
@@ -28,8 +28,8 @@
  (apply-move
   (apply-move
    b
-   (mv e2e4))
-  (mv e7e5)))
+   (string->move "e2e4"))
+  (string->move "e7e5")))
 
 (display "Valid Bishop Move?\n")
 (display "Let's test bc4 after e4 e5 nf3 ng6 -- italian game\n")
@@ -38,10 +38,10 @@
   (apply-move-list
    b
    (list
-    (mv e2e4)
-    (mv e7e5)
-    (mv g1f3)
-    (mv b8c6))))
+    (string->move "e2e4")
+    (string->move "e7e5")
+    (string->move "g1f3")
+    (string->move "b8c6"))))
 
 (print-board italian-board)
 
@@ -49,21 +49,21 @@
 (display
  (valid-bishop-move?
   italian-board
-  (mv f1c4)))
+  (string->move "f1c4")))
 (newline)
 
 (display "bd4 valid?: ")
 (display
  (valid-bishop-move?
   italian-board
-  (mv f1d4)))
+  (string->move "f1d4")))
 (newline)
 
 (display "bh3 valid?: ")
 (display
  (valid-bishop-move?
   italian-board
-  (mv f1h3)))
+  (string->move "f1h3")))
 (newline)
 
 (display "Valid Knight Move?\n")
@@ -73,21 +73,21 @@
 (display
  (valid-knight-move?
   italian-board
-  (mv b1c3)))
+  (string->move "b1c3")))
 (newline)
 
 (display "na3 valid?: ")
 (display
  (valid-knight-move?
   italian-board
-  (mv b1a3)))
+  (string->move "b1a3")))
 (newline)
 
 (display "nb3 valid?: ")
 (display
  (valid-knight-move?
   italian-board
-  (mv b1b3)))
+  (string->move "b1b3")))
 (newline)
 
 
@@ -95,7 +95,7 @@
 (display "Let's test rh3 after 1. h4 -- samurai opening\n")
 
 (define samurai-board
-  (apply-move b (mv h2h4)))
+  (apply-move b (string->move "h2h4")))
 
 (print-board samurai-board)
 
@@ -103,28 +103,28 @@
 (display
  (valid-rook-move?
   samurai-board
-  (mv h1h3)))
+  (string->move "h1h3")))
 (newline)
 
 (display "rh5 valid?: ")
 (display
  (valid-rook-move?
   samurai-board
-  (mv h1h5)))
+  (string->move "h1h5")))
 (newline)
 
 (display "rh2 valid?: ")
 (display
  (valid-rook-move?
   samurai-board
-  (mv h1h2)))
+  (string->move "h1h2")))
 (newline)
 
 (display "Valid King Move?\n")
 (display "Let's test ke2 after 1. e4 e5 -- bong cloud\n")
 
 (define bongcloud-board
-  (apply-move-list b (list (mv e2e4) (mv e7e5))))
+  (apply-move-list b (list (string->move "e2e4") (string->move "e7e5"))))
 
 (print-board bongcloud-board)
 
@@ -132,28 +132,28 @@
 (display
  (valid-king-move?
   bongcloud-board
-  (mv e1e2)))
+  (string->move "e1e2")))
 (newline)
 
 (display "ke3 valid?: ")
 (display
  (valid-king-move?
   bongcloud-board
-  (mv e1e3)))
+  (string->move "e1e3")))
 (newline)
 
 (display "kd2 valid?: ")
 (display
  (valid-king-move?
   bongcloud-board
-  (mv e1d2)))
+  (string->move "e1d2")))
 (newline)
 
 (display "Valid Pawn Move?\n")
 (display "Start from scandinavian board and check various pawn moves\n")
 
 (define scandinavian-board
-  (apply-move-list b (list (mv e2e4) (mv d7d5))))
+  (apply-move-list b (list (string->move "e2e4") (string->move "d7d5"))))
 
 (print-board scandinavian-board)
 
@@ -161,21 +161,21 @@
 (display
  (valid-pawn-move?
   scandinavian-board
-  (mv e4d5)))
+  (string->move "e4d5")))
 (newline)
 
 (display "d3 valid?: ")
 (display
  (valid-pawn-move?
   scandinavian-board
-  (mv d2d3)))
+  (string->move "d2d3")))
 (newline)
 
 (display "e6 valid?: ")
 (display
  (valid-pawn-move?
   scandinavian-board
-  (mv e4e6)))
+  (string->move "e4e6")))
 (newline)
 
 (display "Generating move list\n")
@@ -193,7 +193,7 @@
                (ll moves))
       (if (null? ll)
           best-move
-          (let ((new-score (- (search (apply-move board (car ll)) 2))))
+          (let ((new-score (- (search (apply-move board (car ll)) 1))))
             (loop (if (> new-score best-score) new-score best-score)
                   (if (> new-score best-score) (car ll) best-move)
                   (cdr ll)))))))

@@ -32,12 +32,6 @@
         (rank (- (char->integer rank-char) (char->integer #\1))))
     (square->index rank file)))
 
-;; square from symbol
-(define-syntax sq
-  (syntax-rules ()
-    ((sq coord)
-     (string->index (symbol->string 'coord)))))
-
 (define-record-type <piece>
   (make-piece name colour)
   piece?
@@ -55,12 +49,6 @@
   (let ((from-str (substring s 0 2))
         (to-str (substring s 2 4)))
     (make-move (string->index from-str) (string->index to-str))))
-
-(define-syntax mv
-  (syntax-rules ()
-    ((mv coord)
-     (let ((coord-str (symbol->string 'coord)))
-       (string->move coord-str)))))
 
 ;; apply-move: for dumb state mutation
 ;; Just follows orders and does not check legality.

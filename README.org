@@ -48,12 +48,12 @@ fond of chess.]]
     └── steele         # libraries (steele foo)
         ├── board.scm
         ├── board.sld
-	├── engine.scm
-	├── engine.sld
-	├── rules.scm
-	├── rules.sld
-	├── utils.scm
-	└── utils.sld
+        ├── engine.scm
+        ├── engine.sld
+        ├── rules.scm
+        ├── rules.sld
+        ├── utils.scm
+        └── utils.sld
 #+end_example
 
 * Running
@@ -70,9 +70,6 @@ If you have [[https://justinethier.github.io/cyclone/][cyclone]], you can compil
 then run it. It is about 10x faster than chibi-scheme.
 
 #+begin_src bash
-  # compile the macros
-  cyclone -I src src/steele/board.sld
-
   # compile the main executable
   cyclone -I src/ src/main.scm
 
