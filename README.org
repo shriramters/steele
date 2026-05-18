@@ -42,18 +42,22 @@ fond of chess.]]
 .
 ├── LICENSE
 ├── README.org
-├── steele             # script to run the project
-└── src
-    ├── main.scm       # main entrypoint
-    └── steele         # libraries (steele foo)
-        ├── board.scm
-        ├── board.sld
-        ├── engine.scm
-        ├── engine.sld
-        ├── rules.scm
-        ├── rules.sld
-        ├── utils.scm
-        └── utils.sld
+├── steele              # script to run the project 
+├── src
+│   ├── main.scm        # main entrypoint
+│   └── steele          # libraries (steele foo)
+│       ├── board.scm
+│       ├── board.sld
+│       ├── engine.scm
+│       ├── engine.sld
+│       ├── rules.scm
+│       ├── rules.sld
+│       ├── utils.scm
+│       └── utils.sld
+└── tests               # tests for each lib
+    ├── board.scm
+    ├── engine.scm
+    └── rules.scm
 #+end_example
 
 * Running
@@ -75,6 +79,18 @@ then run it. It is about 10x faster than chibi-scheme.
 
   # run
   ./src/main
+#+end_src
+
+* Tests
+Run an individual test file with either chibi or cyclone.
+For example:
+#+begin_src bash
+  # chibi
+  chibi-scheme -Isrc tests/engine.scm
+
+  # cyclone
+  cyclone -I src/ tests/rules.scm
+  ./tests/rules
 #+end_src
 
 * Current Status
@@ -100,9 +116,15 @@ Not implemented yet.
 *** TODO Castling
 Not implemented yet.
 
-*** TODO SRFI64 tests
-This is long overdue. I have been staving off this work since the
-beginning. This is of higher priority than the other TODO Items here.
+*** TODO Promotion
+Not implemented yet.
+
+*** TODO Tests
+Work in progress.
+
+Tests are located in the ~tests/~ directory. Each lib (utils, rules
+etc) gets an isolated test file. These should be run separately as
+some of them (like ~tests/engine.scm~) can take a long time to run.
 
 *** TODO UCI support
 Not implemented yet.

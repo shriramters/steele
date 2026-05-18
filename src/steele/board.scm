@@ -112,7 +112,7 @@
     (make-piece 'pawn 'black)
     (make-piece 'pawn 'black)
     (make-piece 'pawn 'black)
-    (make-piece 'pawn 'black)     
+    (make-piece 'pawn 'black)
     (make-piece 'rook 'black)
     (make-piece 'knight 'black)
     (make-piece 'bishop 'black)
