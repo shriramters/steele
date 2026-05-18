@@ -108,12 +108,12 @@
      ;; dispatch valid-*-move
      (else
       (case (piece-name p)
-        ('bishop (valid-bishop-move? board move))
-        ('knight (valid-knight-move? board move))
-        ('rook   (valid-rook-move? board move))
-        ('queen  (valid-queen-move? board move))
-        ('king   (valid-king-move? board move))
-        ('pawn   (valid-pawn-move? board move))
+        ((bishop) (valid-bishop-move? board move))
+        ((knight) (valid-knight-move? board move))
+        ((rook)   (valid-rook-move? board move))
+        ((queen)  (valid-queen-move? board move))
+        ((king)   (valid-king-move? board move))
+        ((pawn)   (valid-pawn-move? board move))
         (else #f))))))
 
 ;; can-capture?: check if square can be captured by attacker-colour
