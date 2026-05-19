@@ -33,8 +33,9 @@ fond of chess.]]
 
 
 * Tentative Architectural Choices
-- Chibi Scheme :: For its robust R7RS support  
-- Minimax Algorithm :: Just like Chessnovert
+- Chibi Scheme :: For its robust R7RS support.
+- Cyclone Scheme :: For compilation to native binary. 
+- Minimax Algorithm :: Just like Chessnovert.
 - UCI :: For interfacing with boards such as xboard.
 
 * Project Structure
@@ -42,7 +43,7 @@ fond of chess.]]
 .
 ├── LICENSE
 ├── README.org
-├── steele              # script to run the project 
+├── Makefile
 ├── src
 │   ├── main.scm        # main entrypoint
 │   └── steele          # libraries (steele foo)
@@ -60,12 +61,10 @@ fond of chess.]]
     └── rules.scm
 #+end_example
 
-* Running
+* Running in Interpreted Mode
 From the project root, run the following:
 
 #+begin_src bash
-  ./steele
-  # or
   chibi-scheme -I src src/main.scm
 #+end_src
 
@@ -75,10 +74,10 @@ then run it. It is about 10x faster than chibi-scheme.
 
 #+begin_src bash
   # compile the main executable
-  cyclone -I src/ src/main.scm
+  make
 
   # run
-  ./src/main
+  ./steele
 #+end_src
 
 * Tests
@@ -91,6 +90,24 @@ For example:
   # cyclone
   cyclone -I src/ tests/rules.scm
   ./tests/rules
+#+end_src
+
+Or else, compile and run all tests with cyclone. This is much faster.
+
+#+begin_src bash
+  make test
+#+end_src
+
+* Installation and Uninstalling
+
+You can install and uninstall using make. ~PREFIX~ and ~DESTDIR~ configurable.
+
+#+begin_src bash
+  # Install
+  sudo make install
+
+  # Uninstall
+  sudo make uninstall
 #+end_src
 
 * Current Status

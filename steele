@@ -1,2 +1,0 @@
-#!/bin/sh
-chibi-scheme -I src src/main.scm
