@@ -11,26 +11,15 @@
 (test-begin "Steele Board Tests")
 
 (test-group "Board helpers and conversions"
-  (test
-   "g8 has index 62"
-   62
-   (string->index "g8"))
-  (test
-   "move e2e4 has correct from and to indices"
-   (make-move 12 28)
-   (string->move "e2e4")) ;; e2->12 e4->28
-  (test
-   "index maps to correct file"
-   6
-   (index->file 38)) ;; g5
-  (test
-   "index maps to correct rank"
-   4
-   (index->rank 38)) ;; g5
-  (test
-   "rank and file map to correct index"
-   38
-   (square->index 4 6)))
+  (test "g8 has index 62" 62 (string->index "g8"))
+  (test "index 41 maps to string b6" "b6" (index->string 41))
+  (test "move e2e4 has correct from and to indices"
+        (make-move 12 28) (string->move "e2e4")) ;; e2->12 e4->28
+  (test "move a7f2 maps to string a7f2"
+        "a7f2" (move->string (make-move 48 13))) ;; 48->a7 13->f2
+  (test "index maps to correct file" 6 (index->file 38)) ;; g5
+  (test "index maps to correct rank" 4 (index->rank 38)) ;; g5
+  (test "rank and file map to correct index" 38 (square->index 4 6)))
 
 (test-group "Board State"
   ;; startpos board

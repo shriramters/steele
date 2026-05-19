@@ -6,9 +6,6 @@
 (import (scheme base) (scheme write) (scheme read)
         (steele board) (steele utils) (steele rules) (steele engine))
 
-;; create a default chessboard
-(define b (make-default-board))
-
 ;; minimax-steele
 ;; plays the best minimax search result at a depth 2
 (define (bot-move board)
@@ -23,7 +20,6 @@
                   (if (> new-score best-score) (car ll) best-move)
                   (cdr ll)))))))
 
-(newline)
 (let game-loop ((board (make-default-board)))
   (print-board board)
   (display "Current Evaluation: ")

@@ -1,11 +1,27 @@
 ;; SPDX-FileCopyrightText: 2026 Shriram Ravindranathan <s20n@ters.dev>
 ;; SPDX-License-Identifier: AGPL-3.0-only
 
+;;; Data classes
 (define-record-type <board>
   (make-board grid turn)
   board?
   (grid board-grid)  ;; 1D vector of 64 with 32 <piece>s
   (turn board-turn)) ;; 'white or 'black
+
+(define-record-type <piece>
+  (make-piece name colour)
+  piece?
+  (name piece-name)
+  (colour piece-colour))
+
+(define-record-type <move>
+  ;; from and to are indices
+  (make-move from to)
+  move?
+  (from move-from)
+  (to move-to))
+
+;;; Accessors, Helpers and Conversions
 
 ;; get a piece from the board
 (define board-ref
@@ -24,7 +40,7 @@
 (define (square->index r f)
   (+ f (* 8 r)))
 
-;; "e2" becomes 11
+;; "e2" becomes 12
 (define (string->index s)
   (let* ((file-char (char-upcase (string-ref s 0)))
         (rank-char (char-upcase (string-ref s 1)))
@@ -32,23 +48,26 @@
         (rank (- (char->integer rank-char) (char->integer #\1))))
     (square->index rank file)))
 
-(define-record-type <piece>
-  (make-piece name colour)
-  piece?
-  (name piece-name)
-  (colour piece-colour))
+;; 12 becomes e2
+(define (index->string i)
+  (let* ((file (index->file i))
+        (rank (index->rank i))
+        (file-char (integer->char (+ file (char->integer #\a))))
+        (rank-char (integer->char (+ rank (char->integer #\1)))))
+    (string file-char rank-char)))
 
-(define-record-type <move>
-  ;; from and to are indices
-  (make-move from to)
-  move?
-  (from move-from)
-  (to move-to))
-
+;; converts string to <move>
+;; e.g. "e2e4" -> (make-move 12 28)
 (define (string->move s)
   (let ((from-str (substring s 0 2))
         (to-str (substring s 2 4)))
     (make-move (string->index from-str) (string->index to-str))))
+
+;; converts <move> to string
+;; e.g. {<move> 12 28} -> "e2e4"
+(define (move->string m)
+  (string-append (index->string (move-from m))
+                 (index->string (move-to m))))
 
 ;; apply-move: for dumb state mutation
 ;; Just follows orders and does not check legality.
